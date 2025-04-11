@@ -1,0 +1,77 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  message 0x601 Diag_Resp;
+}
+
+on message 0x701
+{
+  if (this.byte(1) == 0x10 && this.byte(2) == 0x01)
+  {
+    Diag_Resp.dlc = 0x08;
+    Diag_Resp.byte(0) = 0x06;
+    Diag_Resp.byte(1)= 0x50;
+    Diag_Resp.byte(2)= 0x01;
+    Diag_Resp.byte(3)= 0x01;
+    Diag_Resp.byte(4)= 0xF4;
+    Diag_Resp.byte(5)= 0x13;
+    Diag_Resp.byte(6)= 0x88;
+    output(Diag_Resp);
+  }
+else if (this.byte(1) == 0x10 && this.byte(2) == 0x02)
+  {
+    Diag_Resp.dlc = 0x08;
+    Diag_Resp.byte(0) = 0x06;
+    Diag_Resp.byte(1)= 0x50;
+    Diag_Resp.byte(2)= 0x02;
+    Diag_Resp.byte(3)= 0x01;
+    Diag_Resp.byte(4)= 0xF4;
+    Diag_Resp.byte(5)= 0x13;
+    Diag_Resp.byte(6)= 0x88;
+    output(Diag_Resp);
+  }
+
+else if (this.byte(1) == 0x10 && this.byte(2) == 0x03)
+  {
+    Diag_Resp.dlc = 0x08;
+    Diag_Resp.byte(0) = 0x06;
+    Diag_Resp.byte(1)= 0x50;
+    Diag_Resp.byte(2)= 0x03;
+    Diag_Resp.byte(3)= 0x01;
+    Diag_Resp.byte(4)= 0xF4;
+    Diag_Resp.byte(5)= 0x13;
+    Diag_Resp.byte(6)= 0x88;
+    output(Diag_Resp);
+  }
+else if (this.byte(1) == 0x10 && (this.byte(2) != 0x01 ||this.byte(2) != 0x02 ||this.byte(2) != 0x03 ))
+{
+    Diag_Resp.dlc = 0x08;
+    Diag_Resp.byte(0) = 0x03;
+    Diag_Resp.byte(1)= 0x7F;
+    Diag_Resp.byte(2)= 0x10;
+    Diag_Resp.byte(3)= 0x12;
+    output(Diag_Resp);    
+
+}
+}
+
+/*
+else if (this.byte(1) != 0x10 ||this.byte(1) != 0x14 ||this.byte(1) != 0x19 ||this.byte(1) != 0x27 ||this.byte(1) != 0x2E ||this.byte(1) != 0x22)
+{  
+    Diag_Resp.dlc = 0x08;
+    Diag_Resp.byte(0) = 0x03;
+    Diag_Resp.byte(1)= 0x7F;
+    Diag_Resp.byte(2)= this.byte(1);
+    Diag_Resp.byte(3)= 0x11;
+    output(Diag_Resp);    
+}
+}
+*/
+
+
+  
