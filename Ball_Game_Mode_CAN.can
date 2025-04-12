@@ -1,0 +1,230 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  message Ball_Game_Mode_CAN CAN_Ball_Game_Mode_CAN;
+  message ABS_Msg_Data_CAN CAN_ABS_Msg_Data_CAN;
+  message RDS_Coder_Data_CAN CAN_RDS_Coder_Data_CAN;
+  
+  msTimer TIMER_ABS_MSG_DATA_CAN;
+  msTimer TIMER_BALL_GAME_MODE_CAN;
+  
+  int TIMER_VALUE_ABS_MSG_DATA_CAN = 1500;
+  int TIMER_VALUE_BALL_GAME_MODE_CAN = 50;
+}
+
+on start 
+{
+   setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+   setTimer(TIMER_ABS_MSG_DATA_CAN, TIMER_VALUE_ABS_MSG_DATA_CAN);
+}
+
+// Code for BALL_GAME_MODE_CAN
+on timer TIMER_BALL_GAME_MODE_CAN
+{
+    FIXED_PERIODIC_OF_BALL_GAME_MODE_CAN();
+  settimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+} 
+
+
+void FIXED_PERIODIC_OF_BALL_GAME_MODE_CAN()
+{
+  byte miss_ball_game_mode;
+  byte miss_main_switch;
+    
+  miss_ball_game_mode = @Switches::Sys_Miss_Ball_Game_Mode_CAN;
+  miss_main_switch = @Switches::Sys_MainSwitch;
+  
+  if (miss_main_switch ==0 && miss_ball_game_mode ==0)
+  {
+      output(CAN_Ball_Game_Mode_CAN);
+  }
+ }
+
+
+on sysvar GWM::Sys_Actv_Live_1_Rq
+{
+  CAN_Ball_Game_Mode_CAN.Actv_Live_1_Rq = @GWM::Sys_Actv_Live_1_Rq;
+  //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+}
+
+on sysvar GWM::Sys_Actv_Live_2_Rq
+{
+  CAN_Ball_Game_Mode_CAN.Actv_Live_2_Rq = @GWM::Sys_Actv_Live_2_Rq;
+  //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+}
+
+on sysvar GWM::Sys_AM_Menu_Data_Rq
+{
+  CAN_Ball_Game_Mode_CAN.AM_Menu_Data_Rq = @GWM::Sys_AM_Menu_Data_Rq;
+  //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+}
+
+on sysvar GWM::Sys_FM_Menu_Data_Rq
+{
+  CAN_Ball_Game_Mode_CAN.FM_Menu_Data_Rq = @GWM::Sys_FM_Menu_Data_Rq;
+  //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+}
+
+on sysvar GWM::Sys_Preset_6_Bank_Rq
+{
+  CAN_Ball_Game_Mode_CAN.Preset_6_Bank_Rq = @GWM::Sys_Preset_6_Bank_Rq;
+  //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+}
+
+on sysvar GWM::Sys_Preset_12_Bank_Rq
+{
+  byte max_value;
+  max_value = @GWM::Sys_Preset_12_Bank_Rq;
+  
+  if (max_value <= 0x0F)
+  {
+    CAN_Ball_Game_Mode_CAN.Preset_12_Bank_Rq = @GWM::Sys_Preset_12_Bank_Rq;
+    //setTimer(TIMER_BALL_GAME_MODE_CAN, TIMER_VALUE_BALL_GAME_MODE_CAN);
+  }
+  else
+  {
+    openpanel("Error_panel");
+  }
+}
+// END_OF_BALL_GAME_MODE_CAN
+
+//Start of ABS_MSG_DATA_CAN
+on timer TIMER_ABS_MSG_DATA_CAN
+{
+  Event_Periodic_ABS_Msg_Data_CAN();
+  //output(CAN_ABS_Msg_Data_CAN);
+  settimer(TIMER_ABS_MSG_DATA_CAN, TIMER_VALUE_ABS_MSG_DATA_CAN);
+}
+
+void Event_Periodic_ABS_Msg_Data_CAN()
+{
+  
+  byte Miss_Main_Switch;
+  byte Miss_ABS_Msg_Data_CAN;
+  
+  Miss_ABS_Msg_Data_CAN = @Switches::Sys_Miss_ABS_Msg_Data_CAN;
+  Miss_Main_Switch = @Switches::Sys_MainSwitch;
+  
+  if (Miss_Main_Switch == 0 && Miss_ABS_Msg_Data_CAN == 0)
+  {
+    output(CAN_ABS_Msg_Data_CAN);
+    
+  }
+  
+}
+
+on sysvar GWM::Sys_HMI_MID_Sgnl_1_Rq
+{
+  byte max_value;
+  max_value = @GWM::Sys_HMI_MID_Sgnl_1_Rq;
+  if (max_value <= 0x0F)
+  {
+    CAN_ABS_Msg_Data_CAN.HMI_MID_Sgnl_1_Rq = @GWM::Sys_HMI_MID_Sgnl_1_Rq;
+    output(CAN_ABS_Msg_Data_CAN);
+  }
+  else
+    {
+      openPanel("Error_Panel");
+    }
+  }
+
+on sysvar GWM::Sys_HMI_MID_Sgnl_2_Rq
+{
+  byte max_value;
+  max_value = @GWM::Sys_HMI_MID_Sgnl_2_Rq;
+  if (max_value <= 0x0F)
+    {
+    CAN_ABS_Msg_Data_CAN.HMI_MID_Sgnl_2_Rq = @GWM::Sys_HMI_MID_Sgnl_2_Rq;
+    output(CAN_ABS_Msg_Data_CAN);
+    }
+  else
+    {
+      openPanel("Error_Panel");
+    }
+}
+
+on sysvar GWM::Sys_HMI_MID_Sgnl_3_Rq
+{
+   byte max_value;
+  max_value = @GWM::Sys_HMI_MID_Sgnl_3_Rq;
+  if (max_value <= 0x0F)
+  {
+    CAN_ABS_Msg_Data_CAN.HMI_MID_Sgnl_3_Rq = @GWM::Sys_HMI_MID_Sgnl_3_Rq;
+    output(CAN_ABS_Msg_Data_CAN);
+  }
+  else
+  {
+    openPanel("Error_Panel");
+  }
+}
+
+on sysvar GWM::Sys_MID_Data_Rq
+{
+  CAN_ABS_Msg_Data_CAN.MID_Data_Rq = @GWM::Sys_MID_Data_Rq;
+  output(CAN_ABS_Msg_Data_CAN);
+}
+
+on sysvar GWM::Sys_MID_Msg_Rq
+{
+  CAN_ABS_Msg_Data_CAN.MID_Msg_Rq = @GWM::Sys_MID_Msg_Rq;
+  output(CAN_ABS_Msg_Data_CAN);
+}
+
+on sysvar GWM::Sys_Indictr_Lft_Dsply
+{
+  CAN_ABS_Msg_Data_CAN.Indictr_Lft_Dsply = @GWM::Sys_Indictr_Lft_Dsply;
+  output(CAN_ABS_Msg_Data_CAN);
+}
+
+on sysvar GWM::Sys_Indictr_Rgt_Dsply
+{
+  CAN_ABS_Msg_Data_CAN.Indictr_Rgt_Dsply = @GWM::Sys_Indictr_Rgt_Dsply;
+  output(CAN_ABS_Msg_Data_CAN);
+}
+// END_OF_ABS_MSG_DATA_CAN
+
+
+on sysvar GWM::Sys_TA_Data_Rq
+{
+  CAN_RDS_Coder_Data_CAN.TA_Data_Rq = @GWM::Sys_TA_Data_Rq;
+  Event();
+}
+
+on sysvar GWM::Sys_TP_Data_Rq
+{
+  CAN_RDS_Coder_Data_CAN.TP_Data_Rq = @GWM::Sys_TP_Data_Rq;
+  Event();
+}
+
+on sysvar GWM::Sys_Sig_Spdmtr_Rq
+{
+  CAN_RDS_Coder_Data_CAN.Sig_Spdmtr_Rq = @GWM::Sys_Sig_Spdmtr_Rq;
+  Event();
+}
+
+on sysvar GWM::Sys_Ahb_Dsply
+{
+  CAN_RDS_Coder_Data_CAN.Ahb_Dsply = @GWM::Sys_Ahb_Dsply;
+  Event();
+}
+
+void Event()
+{
+ byte Miss_Main_Switch;
+ byte Miss_RDS_Coder;
+    Miss_RDS_Coder = @Switches::Sys_Miss_RDS_Coder_Data_CAN;
+    Miss_Main_Switch = @Switches::Sys_MainSwitch;
+  if (Miss_RDS_Coder ==0 && Miss_Main_Switch ==0 )
+  {
+    output(CAN_RDS_Coder_Data_CAN);
+  }
+}
+
+
+
+

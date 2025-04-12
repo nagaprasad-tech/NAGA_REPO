@@ -1,0 +1,36 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  message 0x701 Diag_Req;
+}
+
+on key 'a'
+{
+  Diag_Req.dlc =0x8;
+  Diag_Req.byte(0) = 0x02;
+  Diag_Req.byte(1) = 0x10;
+   Diag_Req.byte(2) = 0x01;
+  output(Diag_Req);
+}
+
+on key 'b'
+{
+   Diag_Req.dlc =0x8;
+  Diag_Req.byte(0) = 0x02;
+  Diag_Req.byte(1) = 0x10;
+   Diag_Req.byte(2) = 0x02;
+  output(Diag_Req);
+}
+on key 'c'
+{
+  Diag_Req.dlc =0x8;
+  Diag_Req.byte(0) = 0x02;
+  Diag_Req.byte(1) = 0x10;
+   Diag_Req.byte(2) = 0x03;
+  output(Diag_Req);
+}
